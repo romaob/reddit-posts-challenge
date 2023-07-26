@@ -1,10 +1,11 @@
 import {View, Text, StyleSheet} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {RedditPost, getPosts} from '../util/api';
+import React, {useCallback, useEffect, useState} from 'react';
+import {POST_TYPE, RedditPost, getPosts} from '../util/api';
 import PostList from '../components/PostList';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../App';
+import SortButton from '../components/SortButton';
 
 export default function Home(): JSX.Element {
   const navigation =
@@ -12,23 +13,25 @@ export default function Home(): JSX.Element {
   const [data, setData] = useState<RedditPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const [sortSelected, setSortSelected] = useState(POST_TYPE.HOT);
+
+  const fetchData = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      await new Promise(resolve => setTimeout(resolve, 2000)); //! Just to better test the loading state
+      const posts = await getPosts(sortSelected);
+      setData(posts);
+    } catch (e: any) {
+      setError(e);
+    } finally {
+      setLoading(false);
+    }
+  }, [sortSelected]);
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        setLoading(true);
-        setError(null);
-        await new Promise(resolve => setTimeout(resolve, 2000)); //! Just to better test the loading state
-        const posts = await getPosts();
-        setData(posts);
-      } catch (e: any) {
-        setError(e);
-      } finally {
-        setLoading(false);
-      }
-    }
     fetchData();
-  }, []);
+  }, [fetchData, sortSelected]);
 
   function renderErrorState(): JSX.Element | null {
     if (error && !loading) {
@@ -63,7 +66,31 @@ export default function Home(): JSX.Element {
       {renderErrorState()}
       {renderLoadingState()}
       {!loading && !error && (
-        <PostList data={data} onItemPress={onPostPressHandler} />
+        <>
+          <View style={styles.sortMenu}>
+            <SortButton
+              label="Top"
+              onPress={() => setSortSelected(POST_TYPE.TOP)}
+              active={sortSelected === POST_TYPE.TOP}
+            />
+            <SortButton
+              label="New"
+              onPress={() => setSortSelected(POST_TYPE.NEW)}
+              active={sortSelected === POST_TYPE.NEW}
+            />
+            <SortButton
+              label="Hot"
+              onPress={() => setSortSelected(POST_TYPE.HOT)}
+              active={sortSelected === POST_TYPE.HOT}
+            />
+            <SortButton
+              label="Controversial"
+              onPress={() => setSortSelected(POST_TYPE.CONTROVERSIAL)}
+              active={sortSelected === POST_TYPE.CONTROVERSIAL}
+            />
+          </View>
+          <PostList data={data} onItemPress={onPostPressHandler} />
+        </>
       )}
     </View>
   );
@@ -78,5 +105,12 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: 'red',
+  },
+  sortMenu: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 10,
   },
 });
