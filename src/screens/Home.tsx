@@ -6,6 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../App';
 import SortButton from '../components/SortButton';
+import colors from '../values/colors';
 
 export default function Home(): JSX.Element {
   const navigation =
@@ -102,6 +103,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
+    backgroundColor: colors.background,
   },
   errorText: {
     color: 'red',

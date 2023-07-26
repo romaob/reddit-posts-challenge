@@ -13,6 +13,7 @@ import {SafeAreaView, StyleSheet} from 'react-native';
 import Home from './src/screens/Home';
 import Post from './src/screens/Post';
 import {RedditPost} from './src/util/api';
+import colors from './src/values/colors';
 
 const Stack = createNativeStackNavigator();
 

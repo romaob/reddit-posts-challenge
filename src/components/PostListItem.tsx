@@ -2,6 +2,7 @@ import React from 'react';
 import {Text, TouchableOpacity, StyleSheet, Image, View} from 'react-native';
 import {RedditPost} from '../util/api';
 import {getRelativeTimeFromNow} from '../util/dateUtils';
+import colors from '../values/colors';
 
 export interface PostListItemProps {
   item: RedditPost;
@@ -29,10 +30,28 @@ export default function PostListItem({
       )}
       <View style={styles.postContent}>
         <Text style={styles.title}>{item.data.title}</Text>
-        <Text style={styles.author}>By: {item.data.author_fullname}</Text>
+        <View style={styles.profileInfo}>
+          <Image
+            source={require('../assets/icons/person-icon.png')}
+            style={styles.iconLg}
+          />
+          <Text style={styles.author}>{item.data.author_fullname}</Text>
+        </View>
         <View style={styles.postInfo}>
-          <Text style={styles.score}>Score: {item.data.score}</Text>
-          <Text style={styles.comments}>{item.data.num_comments} comments</Text>
+          <View style={styles.postInfoItem}>
+            <Image
+              source={require('../assets/icons/votes-icon.png')}
+              style={styles.icon}
+            />
+            <Text>{item.data.score}</Text>
+          </View>
+          <View style={styles.postInfoItem}>
+            <Image
+              source={require('../assets/icons/comment-icon.png')}
+              style={styles.icon}
+            />
+            <Text>{item.data.num_comments}</Text>
+          </View>
           <Text style={styles.time}>{postTimeParser()}</Text>
         </View>
       </View>
@@ -46,11 +65,9 @@ const styles = StyleSheet.create({
     minHeight: 200,
     flexDirection: 'column',
     padding: 10,
-    backgroundColor: 'white',
+    backgroundColor: colors.cardBackground,
     marginBottom: 15,
     borderRadius: 5,
-    borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.15)',
   },
   thumbnail: {
     width: '100%',
@@ -65,20 +82,39 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginTop: 10,
+    color: colors.primary,
+  },
+  profileInfo: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  iconLg: {
+    width: 28,
+    height: 28,
+    backgroundColor: colors.disabled,
+    borderRadius: 50,
+    marginRight: 5,
   },
   author: {
     fontSize: 16,
+    fontWeight: 'bold',
   },
   postInfo: {
     flex: 1,
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'flex-end',
   },
-  score: {
+  postInfoItem: {
     flex: 1,
+    display: 'flex',
+    flexDirection: 'row',
   },
-  comments: {
-    flex: 1,
+  icon: {
+    width: 15,
+    height: 15,
+    marginRight: 5,
   },
   time: {
     flex: 1,

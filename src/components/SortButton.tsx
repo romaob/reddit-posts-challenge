@@ -1,5 +1,6 @@
 import React from 'react';
 import {Text, TouchableOpacity, StyleSheet} from 'react-native';
+import colors from '../values/colors';
 
 export interface SortButtonProps {
   label: string;
@@ -31,12 +32,12 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#00F',
+    backgroundColor: colors.primary,
     padding: 5,
     borderRadius: 10,
   },
   touchableActive: {
-    backgroundColor: '#F00',
+    backgroundColor: colors.secondary,
   },
   label: {
     color: 'white',
