@@ -2,8 +2,13 @@ import {View, Text, StyleSheet} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {RedditPost, getPosts} from '../util/api';
 import PostList from '../components/PostList';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../../App';
 
 export default function Home(): JSX.Element {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [data, setData] = useState<RedditPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -13,7 +18,7 @@ export default function Home(): JSX.Element {
       try {
         setLoading(true);
         setError(null);
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise(resolve => setTimeout(resolve, 2000)); //! Just to better test the loading state
         const posts = await getPosts();
         setData(posts);
       } catch (e: any) {
@@ -49,11 +54,17 @@ export default function Home(): JSX.Element {
     }
   }
 
+  function onPostPressHandler(item: RedditPost): void {
+    navigation.navigate('Post', {post: item});
+  }
+
   return (
     <View style={styles.page}>
       {renderErrorState()}
       {renderLoadingState()}
-      {!loading && !error && <PostList data={data} onItemPress={() => {}} />}
+      {!loading && !error && (
+        <PostList data={data} onItemPress={onPostPressHandler} />
+      )}
     </View>
   );
 }
@@ -63,6 +74,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 10,
   },
   errorText: {
     color: 'red',

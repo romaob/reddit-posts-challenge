@@ -11,16 +11,29 @@ export default function PostListItem({
   item,
   onPress,
 }: PostListItemProps): JSX.Element {
+  // Function to check if it should render the Image, based on the thumbnail value
+  function showImage(): boolean {
+    console.log(item.data.thumbnail);
+    return item.data.thumbnail !== 'self';
+  }
+
+  function postTimeParser(): string {
+    const postTime = new Date(item.data.created_utc);
+    return postTime.toLocaleString();
+  }
+
   return (
     <TouchableOpacity style={styles.touchable} onPress={() => onPress(item)}>
-      <Image source={{uri: item.data.thumbnail}} style={styles.thumbnail} />
+      {showImage() && (
+        <Image source={{uri: item.data.thumbnail}} style={styles.thumbnail} />
+      )}
       <View style={styles.postContent}>
         <Text style={styles.title}>{item.data.title}</Text>
-        <Text style={styles.author}>{item.data.author_fullname}</Text>
+        <Text style={styles.author}>By: {item.data.author_fullname}</Text>
         <View style={styles.postInfo}>
-          <Text style={styles.score}>{item.data.score} points</Text>
+          <Text style={styles.score}>Score: {item.data.score}</Text>
           <Text style={styles.comments}>{item.data.num_comments} comments</Text>
-          <Text style={styles.time}>{item.data.created_utc} time</Text>
+          <Text style={styles.time}>{postTimeParser()}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -30,10 +43,14 @@ export default function PostListItem({
 const styles = StyleSheet.create({
   touchable: {
     display: 'flex',
+    minHeight: 200,
     flexDirection: 'column',
     padding: 10,
     backgroundColor: 'white',
-    margin: 10,
+    marginBottom: 15,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.15)',
   },
   thumbnail: {
     width: '100%',
@@ -41,25 +58,31 @@ const styles = StyleSheet.create({
   },
   postContent: {
     flex: 1,
-    marginLeft: 10,
+    gap: 10,
   },
   title: {
+    flex: 1,
     fontSize: 20,
     fontWeight: 'bold',
+    marginTop: 10,
   },
   author: {
     fontSize: 16,
   },
   postInfo: {
+    flex: 1,
+    display: 'flex',
     flexDirection: 'row',
   },
   score: {
-    marginRight: 10,
+    flex: 1,
   },
   comments: {
-    marginRight: 10,
+    flex: 1,
   },
   time: {
-    marginRight: 10,
+    flex: 1,
+    display: 'flex',
+    textAlign: 'right',
   },
 });

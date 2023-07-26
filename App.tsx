@@ -12,8 +12,13 @@ import {SafeAreaView, StyleSheet} from 'react-native';
 
 import Home from './src/screens/Home';
 import Post from './src/screens/Post';
+import {RedditPost} from './src/util/api';
 
 const Stack = createNativeStackNavigator();
+
+export type RootStackParamList = {
+  Post: {post: RedditPost} | undefined;
+};
 
 function App(): JSX.Element {
   return (
@@ -21,7 +26,11 @@ function App(): JSX.Element {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="Reddit Posts Challenge" component={Home} />
-          <Stack.Screen name="Post" component={Post} />
+          <Stack.Screen
+            name="Post"
+            component={Post}
+            options={{title: '', headerBackTitle: 'Back'}}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>
