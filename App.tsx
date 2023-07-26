@@ -20,7 +20,7 @@ function App(): JSX.Element {
     <SafeAreaView style={styles.container}>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="Reddit Posts Challenge" component={Home} />
           <Stack.Screen name="Post" component={Post} />
         </Stack.Navigator>
       </NavigationContainer>
