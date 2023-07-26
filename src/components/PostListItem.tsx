@@ -1,15 +1,8 @@
 import React from 'react';
 import {Text, TouchableOpacity, StyleSheet, Image, View} from 'react-native';
 import {RedditPost} from '../util/api';
+import {getRelativeTimeFromNow} from '../util/dateUtils';
 
-export enum TIME_VALUES {
-  MINUTE = 60,
-  HOUR = 3600,
-  DAY = 86400,
-  WEEK = 604800,
-  MONTH = 2592000,
-  YEAR = 31104000,
-}
 export interface PostListItemProps {
   item: RedditPost;
   onPress: (item: RedditPost) => void;
@@ -21,52 +14,12 @@ export default function PostListItem({
 }: PostListItemProps): JSX.Element {
   // Function to check if it should render the Image, based on the thumbnail value
   function showImage(): boolean {
-    console.log(item.data.thumbnail);
     return item.data.thumbnail !== 'self';
   }
 
   function postTimeParser(): string {
     const postTime = new Date(item.data.created_utc * 1000);
-    const now = new Date();
-    const diff = Math.floor((now.getTime() - postTime.getTime()) / 1000);
-
-    if (diff < TIME_VALUES.MINUTE) {
-      return `${diff} second${diff !== 1 ? 's' : ''} ago`;
-    }
-
-    if (diff < TIME_VALUES.HOUR) {
-      return `${Math.floor(diff / TIME_VALUES.MINUTE)} minute${
-        Math.floor(diff / TIME_VALUES.MINUTE) !== 1 ? 's' : ''
-      } ago`;
-    }
-
-    if (diff < TIME_VALUES.DAY) {
-      return `${Math.floor(diff / TIME_VALUES.HOUR)} hour${
-        Math.floor(diff / TIME_VALUES.HOUR) !== 1 ? 's' : ''
-      } ago`;
-    }
-
-    if (diff < TIME_VALUES.WEEK) {
-      return `${Math.floor(diff / TIME_VALUES.DAY)} day${
-        Math.floor(diff / TIME_VALUES.DAY) !== 1 ? 's' : ''
-      } ago`;
-    }
-
-    if (diff < TIME_VALUES.MONTH) {
-      return `${Math.floor(diff / TIME_VALUES.WEEK)} week${
-        Math.floor(diff / TIME_VALUES.WEEK) !== 1 ? 's' : ''
-      } ago`;
-    }
-
-    if (diff < TIME_VALUES.YEAR) {
-      return `${Math.floor(diff / TIME_VALUES.MONTH)} month${
-        Math.floor(diff / TIME_VALUES.MONTH) !== 1 ? 's' : ''
-      } ago`;
-    }
-
-    return `${Math.floor(diff / TIME_VALUES.YEAR)} year${
-      Math.floor(diff / TIME_VALUES.YEAR) !== 1 ? 's' : ''
-    } ago ${diff}`;
+    return getRelativeTimeFromNow(postTime);
   }
 
   return (
