@@ -3,6 +3,7 @@ import {Text, TouchableOpacity, StyleSheet, Image, View} from 'react-native';
 import {RedditPost} from '../util/api';
 import {getRelativeTimeFromNow} from '../util/dateUtils';
 import colors from '../values/colors';
+import font from '../values/font';
 
 export interface PostListItemProps {
   item: RedditPost;
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
   },
   title: {
     flex: 1,
-    fontSize: 20,
+    fontSize: font.xlarge,
     fontWeight: 'bold',
     marginTop: 10,
     color: colors.primary,
@@ -97,7 +98,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   author: {
-    fontSize: 16,
+    fontSize: font.large,
     fontWeight: 'bold',
   },
   postInfo: {
